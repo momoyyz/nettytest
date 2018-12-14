@@ -1,10 +1,8 @@
 package com.netty.demo7;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
-import java.time.LocalDateTime;
 
 
 public class MyClientHandler extends SimpleChannelInboundHandler<String>{
@@ -17,11 +15,6 @@ public class MyClientHandler extends SimpleChannelInboundHandler<String>{
         super.channelRead(ctx, msg);
     }
 
-    @Override
-    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
-        System.out.println("client output: "+evt);
-        super.userEventTriggered(ctx, evt);
-    }
 //    @Override
 //    protected void channelRead(ChannelHandlerContext ctx, String msg) throws Exception {
 //        //服务端的远程地址
@@ -49,10 +42,9 @@ public class MyClientHandler extends SimpleChannelInboundHandler<String>{
     @Override
     protected void messageReceived(ChannelHandlerContext ctx, String s) throws Exception {
         //服务端的远程地址
-        System.out.println(ctx.channel().remoteAddress());
-        System.out.println("client output: "+s);
-        //ctx.writeAndFlush("from client: "+ LocalDateTime.now());
+//        System.out.println(ctx.channel().remoteAddress());
+//        System.out.println("client output: "+s);
+//        ctx.writeAndFlush("from client: "+ LocalDateTime.now());
     }
-
 }
 

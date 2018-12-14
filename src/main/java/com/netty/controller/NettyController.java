@@ -62,7 +62,6 @@ public class NettyController {
                 b.childHandler(new NettyServerFilter(newServerStr)); //设置过滤器
                 f = b.bind(port).sync();
                 if(f.isSuccess()){
-                    socketChannel = (SocketChannel) f.channel();
                     System.out.println("服务端启动成功...");
 
                 }else{
@@ -124,9 +123,12 @@ public class NettyController {
 
 
     @RequestMapping("test4")
-    protected String messageRecsreived(){
+    protected String messageRecsreived() throws InterruptedException {
 
+       // b1.group(group1);
+     //   b1.channel(NioSocketChannel.class);
         b1.handler(new NettyClientFilter());
+        ch = b1.connect(host, port).sync();
 
         return "success";
     }
