@@ -6,9 +6,8 @@ import com.netty.demo2.util.NettyConfig;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 
-public class ServerHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
+public class ServerHandler extends SimpleChannelInboundHandler<String> {
 
     /**
      * 客户端与服务端创建连接的时候调用
@@ -17,7 +16,7 @@ public class ServerHandler extends SimpleChannelInboundHandler<TextWebSocketFram
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         System.out.println("客户端与服务端连接开始...");
         System.out.println();
-        //报错用户channel
+        //保存用户channel
        int size= NettySocketHolder.getMAP().size();
         if(size==0){
             NettySocketHolder.put(1, (NioSocketChannel) ctx.channel());
@@ -58,22 +57,22 @@ public class ServerHandler extends SimpleChannelInboundHandler<TextWebSocketFram
     /**
      * 服务端处理客户端websocket请求的核心方法，这里接收了客户端发来的信息
      */
+//    @Override
+//    public void channelRead(ChannelHandlerContext channelHandlerContext, Object info) throws Exception {
+//        System.out.println("服务到接收到的数据：" + info.toString());
+//        //服务端使用这个就能向 每个连接上来的客户端群发消息
+////        NettyConfig.group.writeAndFlush(info);
+////        Iterator<Channel> iterator = NettyConfig.group.iterator();
+////        while(iterator.hasNext()){
+////            //打印出所有客户端的远程地址
+////            System.out.println((iterator.next()).remoteAddress());
+////        }
+////       单独回复客户端信息
+////       channelHandlerContext.writeAndFlush("===");
+//    }
     @Override
-    public void channelRead(ChannelHandlerContext channelHandlerContext, Object info) throws Exception {
-        System.out.println("服务到接收到的数据：" + info.toString());
-        //服务端使用这个就能向 每个连接上来的客户端群发消息
-//        NettyConfig.group.writeAndFlush(info);
-//        Iterator<Channel> iterator = NettyConfig.group.iterator();
-//        while(iterator.hasNext()){
-//            //打印出所有客户端的远程地址
-//            System.out.println((iterator.next()).remoteAddress());
-//        }
-//       单独回复客户端信息
-//       channelHandlerContext.writeAndFlush("===");
-    }
-    @Override
-    protected void channelRead0(ChannelHandlerContext channelHandlerContext, TextWebSocketFrame textWebSocketFrame) throws Exception {
-        System.out.println("******server channelRead0");
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, String s) throws Exception {
+        System.out.println("服务到接收到的数据：" + s);
     }
     @Override
     public void handlerRemoved(ChannelHandlerContext ctx) {
@@ -87,6 +86,6 @@ public class ServerHandler extends SimpleChannelInboundHandler<TextWebSocketFram
 
     @Override
     public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("channelWritabilityChanged");
+        System.out.println("******server channelWritabilityChanged");
     }
 }

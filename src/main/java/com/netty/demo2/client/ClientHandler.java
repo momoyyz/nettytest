@@ -5,18 +5,13 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
 
 
-public class ClientHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
+public class ClientHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        System.out.println("客户端接收到数据：" + msg.toString());
-         ctx.writeAndFlush("totototto");
+    public void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+        System.out.println("客户端接收到数据：" + msg);
+         ctx.writeAndFlush("应答消息");
 
-    }
-
-    @Override
-    protected void channelRead0(ChannelHandlerContext channelHandlerContext, TextWebSocketFrame textWebSocketFrame) throws Exception {
-        System.out.println("client 客户端接受的消息 2: " + textWebSocketFrame);
     }
 
 
