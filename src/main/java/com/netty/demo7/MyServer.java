@@ -6,9 +6,15 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.logging.LoggingHandler;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class MyServer {
+    private static final Map<Long, NioSocketChannel> MAP = new ConcurrentHashMap<>(16);
+
     public static NioServerSocketChannel serverSocketChannel;
     public static void main(String[] args) throws Exception {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
@@ -21,9 +27,12 @@ public class MyServer {
                     .childHandler(new MyServerInitializer());
 
             ChannelFuture channelFuture = serverBootstrap.bind(8899).sync();
+            NioSocketChannel socketChannel=MAP.get(1);
+            //socketChannel.writeAndFlush("12222");
             serverSocketChannel = (NioServerSocketChannel) channelFuture.channel();
-            MyServer.sendMessage("服务器已发出");
+
             channelFuture.channel().closeFuture().sync();
+            MyServer.sendMessage("122222223");
         }finally {
             bossGroup.shutdownGracefully();
             wokerGroup.shutdownGracefully();
@@ -33,6 +42,7 @@ public class MyServer {
 
         if(serverSocketChannel != null){
             serverSocketChannel.writeAndFlush(msg);
+            System.out.println(serverSocketChannel.isActive());
             System.out.println("服务端已发出");
         }
 

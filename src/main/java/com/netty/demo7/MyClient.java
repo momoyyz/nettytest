@@ -7,7 +7,12 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 public class MyClient {
+    private static final Map<Long, NioSocketChannel> MAP = new ConcurrentHashMap<>(16);
+
     public static  SocketChannel socketChannel;
     public static void main(String[] args) throws Exception{
 
@@ -19,7 +24,8 @@ public class MyClient {
                     .handler(new MyClientInitializer());
 
             ChannelFuture channelFuture = bootstrap.connect("localhost",8899).sync();
-             socketChannel=(SocketChannel)channelFuture.channel();
+
+            socketChannel=(SocketChannel)channelFuture.channel();
            // MyClient.sendMessage("客户端已发出");
             channelFuture.channel().closeFuture().sync();
         }finally {

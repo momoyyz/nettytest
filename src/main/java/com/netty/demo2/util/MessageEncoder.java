@@ -1,10 +1,13 @@
-package com.netty.demo2;
+package com.netty.demo2.util;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 
+/**
+ * 自定义编码器
+ */
 public class MessageEncoder  extends MessageToByteEncoder<RequestInfo> {
 
 

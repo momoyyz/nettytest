@@ -22,15 +22,20 @@ public class MyServerHandler extends SimpleChannelInboundHandler<String>{
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {//打印出客户端地址
-        System.out.println(ctx.channel().remoteAddress()+", "+msg);
-        ctx.channel().writeAndFlush("form server: "+ UUID.randomUUID());
+//        System.out.println(ctx.channel().remoteAddress()+", "+msg);
+//        ctx.channel().writeAndFlush("form server: "+ UUID.randomUUID());
         super.channelRead(ctx, msg);
     }
 
     @Override
-    protected void messageReceived(ChannelHandlerContext ctx, String s) throws Exception {
-//        //打印出客户端地址
-//        System.out.println(ctx.channel().remoteAddress()+", "+s);
-//        ctx.channel().writeAndFlush("form server: "+ UUID.randomUUID());
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, String s) throws Exception {
+        System.out.println(s);
     }
+
+//    @Override
+////    protected void messageReceived(ChannelHandlerContext ctx, String s) throws Exception {
+//////        //打印出客户端地址
+//////        System.out.println(ctx.channel().remoteAddress()+", "+s);
+//////        ctx.channel().writeAndFlush("form server: "+ UUID.randomUUID());
+////    }
 }

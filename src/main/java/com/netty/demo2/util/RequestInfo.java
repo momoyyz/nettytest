@@ -1,4 +1,4 @@
-package com.netty.demo2;
+package com.netty.demo2.util;
 
 public class RequestInfo {
 

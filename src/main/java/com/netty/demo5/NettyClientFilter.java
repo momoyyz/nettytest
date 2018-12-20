@@ -7,17 +7,15 @@ import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.codec.Delimiters;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
-
 /**
+ *
  * Title: NettyClientFilter
  * Description: Netty客户端 过滤器
  * Version:1.0.0
- *
  * @author Administrator
  * @date 2017-8-31
  */
 public class NettyClientFilter extends ChannelInitializer<SocketChannel> {
-
 
     @Override
     protected void initChannel(SocketChannel ch) throws Exception {

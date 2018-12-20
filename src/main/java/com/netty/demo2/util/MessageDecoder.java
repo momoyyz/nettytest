@@ -1,4 +1,4 @@
-package com.netty.demo2;
+package com.netty.demo2.util;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -6,6 +6,9 @@ import io.netty.handler.codec.ByteToMessageDecoder;
 
 import java.util.List;
 
+/**
+ * 自定义解码器
+ */
 public class MessageDecoder extends ByteToMessageDecoder {
 
 
@@ -16,13 +19,13 @@ public class MessageDecoder extends ByteToMessageDecoder {
         //判断协议类型
         byte infoType = in.readByte();
         RequestInfo requestInfo = new RequestInfo();
-        System.out.println(infoType);
+        //System.out.println(infoType);
         requestInfo.setType(infoType);
         //in.readableBytes()即为剩下的字节数
         byte[] info = new byte[in.readableBytes()];
         in.readBytes(info);
         requestInfo.setInfo(new String(info, "utf-8"));
-        System.out.println(info.length + " : " + requestInfo.getInfo());
+       // System.out.println(info.length + " : " + requestInfo.getInfo());
         //最后把你想要交由ServerHandler的数据添加进去，就可以了
         out.add(requestInfo);
     }

@@ -15,6 +15,11 @@ public class MyClientHandler extends SimpleChannelInboundHandler<String>{
         super.channelRead(ctx, msg);
     }
 
+    @Override
+    protected void channelRead0(ChannelHandlerContext channelHandlerContext, String s) throws Exception {
+        System.out.println(s);
+    }
+
 //    @Override
 //    protected void channelRead(ChannelHandlerContext ctx, String msg) throws Exception {
 //        //服务端的远程地址
@@ -39,12 +44,12 @@ public class MyClientHandler extends SimpleChannelInboundHandler<String>{
         ctx.close();
     }
 
-    @Override
-    protected void messageReceived(ChannelHandlerContext ctx, String s) throws Exception {
-        //服务端的远程地址
-//        System.out.println(ctx.channel().remoteAddress());
-//        System.out.println("client output: "+s);
-//        ctx.writeAndFlush("from client: "+ LocalDateTime.now());
-    }
+//    @Override
+//    protected void messageReceived(ChannelHandlerContext ctx, String s) throws Exception {
+//        //服务端的远程地址
+////        System.out.println(ctx.channel().remoteAddress());
+////        System.out.println("client output: "+s);
+////        ctx.writeAndFlush("from client: "+ LocalDateTime.now());
+//    }
 }
 

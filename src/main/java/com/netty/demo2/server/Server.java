@@ -1,15 +1,24 @@
-package com.netty.demo2;
+package com.netty.demo2.server;
 
+import com.netty.demo2.util.NettySocketHolder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
+
+import java.nio.charset.Charset;
 
 public class Server {
+    private EventLoopGroup boss = new NioEventLoopGroup();
+    private EventLoopGroup work = new NioEventLoopGroup();
 
-    private ServerSocketChannel serverSocketChannel;
+    private static ServerSocketChannel serverSocketChannel;
 
     public Server(int serverPort){
         bind(serverPort);
@@ -21,12 +30,12 @@ public class Server {
             public void run() {
                 //服务端要建立两个group，一个负责接收客户端的连接，一个负责处理数据传输
                 //连接处理group
-                EventLoopGroup boss = new NioEventLoopGroup();
+                 //boss = new NioEventLoopGroup();
                 //事件处理group
-                EventLoopGroup worker = new NioEventLoopGroup();
+                // worker = new NioEventLoopGroup();
                 ServerBootstrap bootstrap = new ServerBootstrap();
                 // 绑定处理group
-                bootstrap.group(boss, worker).channel(NioServerSocketChannel.class)
+                bootstrap.group(boss, work).channel(NioServerSocketChannel.class)
                         //保持连接数
                         .option(ChannelOption.SO_BACKLOG, 128)
                         //有数据立即发送
@@ -41,10 +50,10 @@ public class Server {
                                 ChannelPipeline p = sc.pipeline();
                                 p.addLast(
 //										//使用了netty自带的编码器和解码器
-//										new StringDecoder(Charset.forName("utf-8")),
-//										new StringEncoder(Charset.forName("utf-8")),
-                                        new MessageDecoder(),
-                                        new MessageEncoder(),
+										new StringDecoder(Charset.forName("utf-8")),
+										new StringEncoder(Charset.forName("utf-8")),
+                                        //new MessageDecoder(),
+                                        //new MessageEncoder(),
                                         //自定义的处理器
                                         new ServerHandler());
                             }
@@ -69,16 +78,28 @@ public class Server {
                 finally {
                     //优雅地退出，释放线程池资源
                     boss.shutdownGracefully();
-                    worker.shutdownGracefully();
+                    work.shutdownGracefully();
                 }
             }
         });
         thread.start();
     }
 
-    public void sendMessage(Object msg){
-        if(serverSocketChannel != null){
-            serverSocketChannel.writeAndFlush(msg);
+    public static void sendMessage(TextWebSocketFrame msg){
+        NioSocketChannel socketChannel = com.netty.demo5.NettySocketHolder.get(1L);
+
+        if (null == socketChannel) {
+            throw new NullPointerException("没有[" + 1 + "]的socketChannel");
         }
+        System.out.println(NettySocketHolder.getMAP());
+        String message="to Client";
+        System.out.println("发送给客户端的数据:"+message);
+        ChannelFuture future = socketChannel.writeAndFlush(message);
+
+    }
+    public void destroy() {
+        boss.shutdownGracefully().syncUninterruptibly();
+        work.shutdownGracefully().syncUninterruptibly();
+        System.out.println("关闭 Netty 成功");
     }
 }
